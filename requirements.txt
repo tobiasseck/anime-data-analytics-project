@@ -1,4 +1,7 @@
 ipykernel
 matplotlib
+nltk
 pandas
+re
 seaborn
+wordCloud
