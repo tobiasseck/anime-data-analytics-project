@@ -2,8 +2,8 @@
 
 > [!IMPORTANT]  
 > This repo is currently a work in progress.
->
-> ## Getting Started
+
+## Getting Started
 
 Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
 
