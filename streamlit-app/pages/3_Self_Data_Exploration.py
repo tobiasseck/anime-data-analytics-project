@@ -27,8 +27,6 @@ Instructions:
 4. Explore relationships between different variables in the dataset.
 """)
 
-# Generate the HTML using Pygwalker
 pyg_html = pyg.to_html(data)
 
-# Embed the HTML into the Streamlit app
 components.html(pyg_html, height=1000, scrolling=True)
