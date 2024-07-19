@@ -18,9 +18,9 @@ def load_models_and_data():
         'type_source_demographic_producer_genre_platform'
     ]
     for reg_type in regression_types:
-        with open(f'../models/multiple_regression_{reg_type}.pkl', 'rb') as f:
+        with open(f'./models/multiple_regression_{reg_type}.pkl', 'rb') as f:
             models[reg_type] = pickle.load(f)
-        with open(f'../data/prepared_{reg_type}_data.pkl', 'rb') as f:
+        with open(f'./data/prepared_{reg_type}_data.pkl', 'rb') as f:
             data[reg_type] = pickle.load(f)
     return models, data
 
