@@ -61,9 +61,6 @@ def create_residual_plot(y_true, y_pred, title):
     return fig
 
 def display_model_results(model_name, model, data):
-    st.write(f"Displaying results for {model_name}")
-    st.write(f"Model type: {type(model)}")
-    st.write(f"Data type: {type(data)}")
     
     if isinstance(data, dict):
         if 'X_test' in data and 'y_test' in data:
@@ -95,11 +92,6 @@ def display_model_results(model_name, model, data):
         r2_model_score_str = f"{r2_model_score:.2f}" if isinstance(r2_model_score, float) else r2_model_score
         
         st.write(f"{model_name} - MSE: {mse:.2f}, R² (sklearn): {r2:.2f}, R² (model.score): {r2_model_score_str}")
-        
-        st.write(f"X_test shape: {X_test.shape}")
-        st.write(f"y_test shape: {y_test.shape}")
-        st.write(f"First few values of y_test: {y_test[:5]}")
-        st.write(f"First few values of y_pred: {y_pred[:5]}")
         
         fig1 = create_prediction_plot(y_test, y_pred, f'Actual vs Predicted Popularity ({model_name})')
         st.plotly_chart(fig1, use_container_width=True)
