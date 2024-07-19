@@ -17,27 +17,31 @@ def load_data():
 
 data = load_data()
 
+@st.cache_data
+def create_sorted_table(df, sort_column, ascending=False, limit=25):
+    return df.sort_values(by=sort_column, ascending=ascending).head(limit)
+
+@st.cache_data
+def get_filter_options(df):
+    all_genres = set([genre for genres in df['genre'] for genre in genres])
+    return {
+        'genres': ['All'] + sorted(all_genres),
+        'demographics': ['All'] + df['Demographic'].dropna().unique().tolist(),
+        'types': ['All'] + df['Type'].dropna().unique().tolist(),
+        'sources': ['All'] + df['Source'].dropna().unique().tolist()
+    }
+
 st.title("Anime Rankings")
+
+filter_options = get_filter_options(data)
 
 # Sidebar filters
 st.sidebar.header("Filters")
 
-# Genre filter
-all_genres = set([genre for genres in data['genre'] for genre in genres])
-genres = ['All'] + sorted(all_genres)
-selected_genre = st.sidebar.selectbox("Select Genre", genres)
-
-# Demographic filter
-demographics = ['All'] + data['Demographic'].unique().tolist()
-selected_demographic = st.sidebar.selectbox("Select Demographic", demographics)
-
-# Type filter
-types = ['All'] + data['Type'].unique().tolist()
-selected_type = st.sidebar.selectbox("Select Type", types)
-
-# Source filter
-sources = ['All'] + data['Source'].unique().tolist()
-selected_source = st.sidebar.selectbox("Select Source", sources)
+selected_genre = st.sidebar.selectbox("Select Genre", filter_options['genres'])
+selected_demographic = st.sidebar.selectbox("Select Demographic", filter_options['demographics'])
+selected_type = st.sidebar.selectbox("Select Type", filter_options['types'])
+selected_source = st.sidebar.selectbox("Select Source", filter_options['sources'])
 
 col1, col2 = st.sidebar.columns(2)
 apply_button = col1.button("Apply Filters")
@@ -70,23 +74,26 @@ if reset_button:
     }
 
 # Apply filters
-filtered_data = data.copy()
-if st.session_state.filters['genre'] != 'All':
-    filtered_data = filtered_data[filtered_data['genre'].apply(lambda x: st.session_state.filters['genre'] in x)]
-if st.session_state.filters['demographic'] != 'All':
-    filtered_data = filtered_data[filtered_data['Demographic'] == st.session_state.filters['demographic']]
-if st.session_state.filters['type'] != 'All':
-    filtered_data = filtered_data[filtered_data['Type'] == st.session_state.filters['type']]
-if st.session_state.filters['source'] != 'All':
-    filtered_data = filtered_data[filtered_data['Source'] == st.session_state.filters['source']]
+@st.cache_data
+def apply_filters(df, filters):
+    filtered = df.copy()
+    if filters['genre'] != 'All':
+        filtered = filtered[filtered['genre'].apply(lambda x: filters['genre'] in x)]
+    if filters['demographic'] != 'All':
+        filtered = filtered[filtered['Demographic'] == filters['demographic']]
+    if filters['type'] != 'All':
+        filtered = filtered[filtered['Type'] == filters['type']]
+    if filters['source'] != 'All':
+        filtered = filtered[filtered['Source'] == filters['source']]
+    return filtered
+
+filtered_data = apply_filters(data, st.session_state.filters)
 
 # Create tabs
 tab1, tab2, tab3, tab4, tab5 = st.tabs(["Top by Rank", "Top by Score", "Top by Members", "Top by Popularity", "Top by Favorites"])
 
-def display_anime_table(df, sort_column, ascending=False, limit=50):
-    sorted_df = df.sort_values(by=sort_column, ascending=ascending).head(limit)
-    
-    for _, row in sorted_df.iterrows():
+def display_anime_table(df, sort_column):
+    for _, row in df.iterrows():
         col1, col2, col3, col4, col5, col6 = st.columns([1, 2, 3, 2, 1, 1])
         
         with col1:
@@ -96,6 +103,9 @@ def display_anime_table(df, sort_column, ascending=False, limit=50):
                 st.image(img, width=100)
             except:
                 st.write("Image not available")
+        
+        with col2:
+            st.subheader(row['title'])
         
         with col3:
             synopsis = row['synopsis'] if pd.notna(row['synopsis']) else "No synopsis available"
@@ -107,7 +117,7 @@ def display_anime_table(df, sort_column, ascending=False, limit=50):
         
         with col5:
             duration = row['Duration'] if pd.notna(row['Duration']) else "Unknown"
-            st.metric("Duration", f"{duration} min")
+            st.metric("Duration", f"{int(duration)} min")
         
         with col6:
             value = row[sort_column] if pd.notna(row[sort_column]) else "N/A"
@@ -117,20 +127,25 @@ def display_anime_table(df, sort_column, ascending=False, limit=50):
 
 with tab1:
     st.header("Top 50 by Rank")
-    display_anime_table(filtered_data, 'ranked', ascending=True)
+    ranked_table = create_sorted_table(filtered_data, 'ranked', ascending=True)
+    display_anime_table(ranked_table, 'ranked')
 
 with tab2:
     st.header("Top 50 by Score")
-    display_anime_table(filtered_data, 'score')
+    score_table = create_sorted_table(filtered_data, 'score')
+    display_anime_table(score_table, 'score')
 
 with tab3:
     st.header("Top 50 by Members")
-    display_anime_table(filtered_data, 'members')
+    members_table = create_sorted_table(filtered_data, 'members')
+    display_anime_table(members_table, 'members')
 
 with tab4:
     st.header("Top 50 by Popularity")
-    display_anime_table(filtered_data, 'popularity', ascending=True)
+    popularity_table = create_sorted_table(filtered_data, 'popularity', ascending=True)
+    display_anime_table(popularity_table, 'popularity')
 
 with tab5:
     st.header("Top 50 by Favorites")
-    display_anime_table(filtered_data, 'Favorites')
+    favorites_table = create_sorted_table(filtered_data, 'Favorites')
+    display_anime_table(favorites_table, 'Favorites')
