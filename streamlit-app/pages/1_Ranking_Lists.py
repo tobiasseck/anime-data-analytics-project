@@ -8,6 +8,14 @@ import ast
 
 st.set_page_config(layout="wide", page_title="Anime Rankings")
 
+st.markdown("""
+<style>
+    .stTabs [data-baseweb="tab-list"] {
+        justify-content: flex-end;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 @st.cache_data
 def load_data():
     df = pd.read_csv("../data/animes_better.csv")
@@ -90,7 +98,9 @@ def apply_filters(df, filters):
 filtered_data = apply_filters(data, st.session_state.filters)
 
 # Create tabs
-tab1, tab2, tab3, tab4, tab5 = st.tabs(["Top by Rank", "Top by Score", "Top by Members", "Top by Popularity", "Top by Favorites"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    "Rank", "Score", "Members", "Popularity", "Favorites"
+])
 
 def display_anime_table(df, sort_column):
     for _, row in df.iterrows():
