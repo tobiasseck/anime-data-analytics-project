@@ -11,7 +11,6 @@ def load_data():
 data = load_data()
 
 st.title("Anime Data Analysis Project")
-st.write("Welcome to my Streamlit app showcasing an analysis of anime data!")
 
 st.header("Project Overview")
 st.write("""
@@ -23,8 +22,6 @@ Through this app, you can explore:
 - Interactive data exploration tools
 - Machine learning insights into what makes an anime popular
 - A predictor for estimating an anime's popularity based on its characteristics
-
-Use the sidebar to navigate through different sections of the app.
 """)
 
 st.header("Dataset Preview")

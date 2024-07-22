@@ -36,8 +36,8 @@ def load_models_and_data():
                     'scaler': loaded_data.get('scaler'),
                     'original_data': loaded_data
                 }
-                if isinstance(loaded_data, dict) and 'original_data' in loaded_data:
-                    total_anime = max(total_anime, len(loaded_data['original_data']))                
+                if 'X' in loaded_data and isinstance(loaded_data['X'], pd.DataFrame):
+                    total_anime = max(total_anime, loaded_data['X'].shape[0])                 
         except Exception as e:
             st.warning(f"Failed to load multiple_regression_{reg_type} model or data: {str(e)}")
 
@@ -60,8 +60,8 @@ def load_models_and_data():
                     'scaler': loaded_data.get('scaler'),
                     'original_data': loaded_data
                 }
-                if isinstance(loaded_data, dict) and 'original_data' in loaded_data:
-                    total_anime = max(total_anime, len(loaded_data['original_data']))
+                if 'X' in loaded_data and isinstance(loaded_data['X'], pd.DataFrame):
+                    total_anime = max(total_anime, loaded_data['X'].shape[0])
         except Exception as e:
             st.warning(f"Failed to load {model} model or data: {str(e)}")
 
@@ -81,12 +81,12 @@ def load_models_and_data():
                 'scaler': loaded_data.get('scaler'),
                 'original_data': loaded_data
             }
-            if isinstance(loaded_data, dict) and 'original_data' in loaded_data:
-                total_anime = max(total_anime, len(loaded_data['original_data']))
+            if 'X' in loaded_data and isinstance(loaded_data['X'], pd.DataFrame):
+                total_anime = max(total_anime, loaded_data['X'].shape[0])
     except Exception as e:
         st.warning(f"Failed to load neural network model or data: {str(e)}")
     
     if total_anime == 0:
-        total_anime = 10000
+        total_anime = 5000
 
     return models, data, total_anime

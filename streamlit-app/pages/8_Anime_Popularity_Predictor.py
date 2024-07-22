@@ -145,6 +145,8 @@ with tab1:
         selected_model = st.selectbox("Select Model", options=list(model_options.values()))
 
     with col4:
+        st.write('')
+        st.write('')
         predict_button = st.button("Predict Popularity")
 
     if predict_button:
@@ -228,17 +230,6 @@ with tab1:
         )
 
         st.plotly_chart(fig)
-
-        if hasattr(models[selected_model_key], 'feature_importances_'):
-            importances = models[selected_model_key].feature_importances_
-            feature_names = models[selected_model_key].feature_names_in_
-            feature_importance = pd.DataFrame({'feature': feature_names, 'importance': importances})
-            feature_importance = feature_importance.sort_values('importance', ascending=False).head(10)
-            
-            fig = go.Figure([go.Bar(x=feature_importance['feature'], y=feature_importance['importance'])])
-            fig.update_layout(title='Top 10 Feature Importances', xaxis_title='Features', yaxis_title='Importance')
-            st.plotly_chart(fig)
-
 
         st.subheader("Monte Carlo Simulation")
         mc_prediction = np.mean(mc_results)
