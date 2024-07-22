@@ -5,8 +5,6 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from sklearn.preprocessing import MultiLabelBinarizer
 
-st.set_page_config(layout="wide", page_title="Guided Data Exploration")
-
 st.markdown("""
 <style>
     .stTabs [data-baseweb="tab-list"] {

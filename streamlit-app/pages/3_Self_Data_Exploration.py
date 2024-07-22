@@ -3,8 +3,6 @@ import pandas as pd
 import pygwalker as pyg
 import streamlit.components.v1 as components
 
-st.set_page_config(layout="wide", page_title="Self Data Exploration")
-
 @st.cache_data
 def load_data():
     df = pd.read_csv("../data/animes_better.csv")

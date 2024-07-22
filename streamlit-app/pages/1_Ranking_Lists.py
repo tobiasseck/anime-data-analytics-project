@@ -8,8 +8,6 @@ from io import BytesIO
 import pickle
 import ast
 
-st.set_page_config(layout="wide", page_title="Anime Rankings")
-
 st.markdown("""
 <style>
     .stTabs [data-baseweb="tab-list"] {

@@ -5,8 +5,6 @@ import plotly.graph_objs as go
 import plotly.express as px
 import ast
 
-st.set_page_config(layout="wide", page_title="Feature Correlations")
-
 st.markdown("""<style>.stTabs [data-baseweb="tab-list"] {justify-content: flex-end;}</style>""", unsafe_allow_html=True)
 
 @st.cache_data

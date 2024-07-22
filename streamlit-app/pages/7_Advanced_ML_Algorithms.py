@@ -8,8 +8,6 @@ from sklearn.metrics import r2_score, mean_squared_error
 import tensorflow as tf
 from utils import load_models_and_data
 
-st.set_page_config(layout="wide", page_title="Advanced ML Algorithms")
-
 st.markdown("""<style>.stTabs [data-baseweb="tab-list"] {justify-content: flex-end;}</style>""", unsafe_allow_html=True)
 
 @st.cache_resource

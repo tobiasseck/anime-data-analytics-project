@@ -4,6 +4,10 @@ import pickle
 import os
 import tensorflow as tf
 
+def load_page(page_path):
+    with open(page_path, 'r') as file:
+        exec(file.read(), globals())
+
 @st.cache_resource
 def load_models_and_data():
     models = {}
