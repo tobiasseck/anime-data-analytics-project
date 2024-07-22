@@ -4,38 +4,12 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 from scipy import stats
+import os
+from utils import load_models_and_data
+
+st.write("Current working directory:", os.getcwd())
 
 st.title("Anime Popularity Predictor")
-
-@st.cache_resource
-def load_models_and_data():
-    models = {}
-    data = {}
-    
-    model_names = ['multiple_regression_type_source_demographic_producer_genre_platform', 'random_forest', 'gradient_boosting', 'xgboost']
-    for model in model_names:
-        model_path = f'./models/{model}.pkl'
-        data_path = f'./data/prepared_{model}_data.pkl'
-        
-        try:
-            with open(model_path, 'rb') as f:
-                models[model] = pickle.load(f)
-            with open(data_path, 'rb') as f:
-                data[model] = pickle.load(f)
-        except Exception as e:
-            st.warning(f"Failed to load {model} model or data: {str(e)}")
-    
-    nn_model_path = './models/neural_network_savedmodel'
-    nn_data_path = './data/prepared_neural_network_data.pkl'
-    
-    try:
-        models['neural_network'] = tf.saved_model.load(nn_model_path)
-        with open(nn_data_path, 'rb') as f:
-            data['neural_network'] = pickle.load(f)
-    except Exception as e:
-        st.warning(f"Failed to load neural network model or data: {str(e)}")
-    
-    return models, data
 
 models, data = load_models_and_data()
 
