@@ -8,9 +8,10 @@ import plotly.express as px
 import itertools
 import hydralit_components as hc
 import time
-from utils import load_models_and_data
 
-models, data, total_anime = load_models_and_data()
+models = st.session_state.models
+data = st.session_state.data
+total_anime = st.session_state.total_anime
 
 # with open('./models/overall_best_combination.pkl', 'rb') as f:
 #     overall_best_combo, overall_best_rank = pickle.load(f)
@@ -167,9 +168,9 @@ with tab1:
         with hc.HyLoader('Mixing maths and magic..', hc.Loaders.standard_loaders, index=1):
             time.sleep(5)
 
-        mc_results = monte_carlo_simulation(selected_model_key, features)
-        prediction = np.mean(mc_results)
-        ci_lower, ci_upper = np.percentile(mc_results, [2.5, 97.5])
+            mc_results = monte_carlo_simulation(selected_model_key, features)
+            prediction = np.mean(mc_results)
+            ci_lower, ci_upper = np.percentile(mc_results, [2.5, 97.5])
         
         st.header("Prediction Results")
         percentile = (prediction - 1) / (total_anime - 1) * 100
@@ -185,9 +186,17 @@ with tab1:
         
         fig.add_trace(go.Indicator(
             mode="number+gauge+delta",
-            value=prediction,
+            value=int(prediction),
+            number={'valueformat': ',d'},
             domain={'x': [0, 1], 'y': [0, 1]},
-            delta={'reference': round(total_anime*0.5, 2), 'position': "top", 'relative': True},
+            delta={
+                'reference': total_anime*0.3, 
+                'position': "top", 
+                'relative': False, 
+                'valueformat': '.2f',
+                'increasing': {'color': "red"},
+                'decreasing': {'color': "green"}
+            },
             title={'text': "Predicted Popularity Rank"},
             gauge={
                 'axis': {'range': [total_anime, 1], 'tickwidth': 1, 'tickcolor': "darkblue"},
@@ -196,10 +205,10 @@ with tab1:
                 'borderwidth': 2,
                 'bordercolor': "gray",
                 'steps': [
-                    {'range': [1, total_anime*0.2], 'color': 'cyan'},
-                    {'range': [total_anime*0.2, total_anime*0.5], 'color': 'royalblue'},
-                    {'range': [total_anime*0.5, total_anime], 'color': 'lightblue'}
-                ],
+                            {'range': [total_anime*0.8, total_anime], 'color': 'cyan'},
+                            {'range': [total_anime*0.5, total_anime*0.8], 'color': 'royalblue'},
+                            {'range': [1, total_anime*0.5], 'color': 'lightblue'}
+                        ],
                 'threshold': {
                     'line': {'color': "red", 'width': 4},
                     'thickness': 0.75,

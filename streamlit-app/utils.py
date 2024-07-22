@@ -3,12 +3,61 @@ import streamlit as st
 import pickle
 import os
 import tensorflow as tf
+import numpy as np
+import pickle
+from scipy import stats
+import plotly.graph_objects as go
+import plotly.express as px
+import itertools
+import time
+
+from sklearn.metrics import r2_score, mean_squared_error
+import tensorflow as tf
+
+from plotly.subplots import make_subplots
+
+import ast
+
+import pygwalker as pyg
+import streamlit.components.v1 as components
+
+from sklearn.preprocessing import MultiLabelBinarizer
+
+from PIL import Image
+import requests
+from io import BytesIO
+
 
 def load_page(page_path):
     with open(page_path, 'r') as file:
         code = file.read()
         try:
-            exec(code, globals())
+            exec_globals = globals().copy()
+            exec_globals.update({
+                'st': st,
+                'pd': pd,
+                'np': np,
+                'go': go,
+                'px': px,
+                'tf': tf,
+                'r2_score': r2_score,
+                'mean_squared_error': mean_squared_error,
+                'load_models_and_data': load_models_and_data,
+                'session_state': st.session_state,
+                'pickle': pickle,
+                'stats': stats,
+                'itertools': itertools,
+                'time': time,
+                'make_subplots': make_subplots,
+                'ast': ast,
+                'pyg': pyg,
+                'components': components,
+                'MultiLabelBinarizer': MultiLabelBinarizer,
+                'Image': Image,
+                'requests': requests,
+                'BytesIO': BytesIO
+            })
+            exec(code, exec_globals)
         except Exception as e:
             st.error(f"Fehläääär auf {page_path}: {e}")
 

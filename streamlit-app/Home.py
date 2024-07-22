@@ -46,6 +46,9 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+if 'models' not in st.session_state:
+    st.session_state.models, st.session_state.data, st.session_state.total_anime = load_models_and_data()
+
 if menu_id in pages:
     if menu_id != "Ranking Lists":
         st.markdown(
