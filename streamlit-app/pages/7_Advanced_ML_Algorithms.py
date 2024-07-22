@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import pickle
 import plotly.graph_objs as go
 import plotly.express as px
 from sklearn.metrics import r2_score, mean_squared_error
