@@ -6,7 +6,11 @@ import tensorflow as tf
 
 def load_page(page_path):
     with open(page_path, 'r') as file:
-        exec(file.read(), globals())
+        code = file.read()
+        try:
+            exec(code, globals())
+        except Exception as e:
+            st.error(f"Fehläääär auf {page_path}: {e}")
 
 @st.cache_resource
 def load_models_and_data():

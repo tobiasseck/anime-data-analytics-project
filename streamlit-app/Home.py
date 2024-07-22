@@ -38,21 +38,9 @@ menu_id = hc.nav_bar(
 st.markdown(
     """
     <style>
-        /* Hide Streamlit footer */
-        footer {visibility: hidden;}
-        
-        /* Hide Streamlit menu */
-        header {visibility: hidden;}
-
-        /* Hide the hamburger menu */
-        [data-testid="collapsedControl"] {
-            display: none;
-        }
-
         [data-testid="stSidebarNav"]{
         display: none;
         }
-     
     </style>
     """,
     unsafe_allow_html=True

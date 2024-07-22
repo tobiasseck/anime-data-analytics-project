@@ -6,6 +6,8 @@ from scipy import stats
 import plotly.graph_objects as go
 import plotly.express as px
 import itertools
+import hydralit_components as hc
+import time
 from utils import load_models_and_data
 
 models, data, total_anime = load_models_and_data()
@@ -152,7 +154,7 @@ with tab1:
     if predict_button:
         selected_model_key = [k for k, v in model_options.items() if v == selected_model][0]
         st.session_state.selected_model_key = selected_model_key
-        
+
         features = pd.DataFrame({
             'type': [anime_type],
             'source': [source],
@@ -162,6 +164,9 @@ with tab1:
             'platform_count': [1]
         })
         
+        with hc.HyLoader('Mixing maths and magic..', hc.Loaders.standard_loaders, index=1):
+            time.sleep(5)
+
         mc_results = monte_carlo_simulation(selected_model_key, features)
         prediction = np.mean(mc_results)
         ci_lower, ci_upper = np.percentile(mc_results, [2.5, 97.5])
@@ -182,7 +187,7 @@ with tab1:
             mode="number+gauge+delta",
             value=prediction,
             domain={'x': [0, 1], 'y': [0, 1]},
-            delta={'reference': total_anime*0.5, 'position': "top", 'relative': True},
+            delta={'reference': round(total_anime*0.5, 2), 'position': "top", 'relative': True},
             title={'text': "Predicted Popularity Rank"},
             gauge={
                 'axis': {'range': [total_anime, 1], 'tickwidth': 1, 'tickcolor': "darkblue"},
