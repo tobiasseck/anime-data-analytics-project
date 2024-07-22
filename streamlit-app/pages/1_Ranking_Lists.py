@@ -142,7 +142,7 @@ def display_anime_table(df, sort_column):
         
         with col3:
             synopsis = row['synopsis'] if pd.notna(row['synopsis']) else "No synopsis available"
-            st.write(synopsis[:200] + "..." if len(synopsis) > 200 else synopsis)
+            st.write(synopsis[:250] + "..." if len(synopsis) > 250 else synopsis)
         
         with col4:
             if isinstance(row['genre'], (list, np.ndarray)):
@@ -157,13 +157,13 @@ def display_anime_table(df, sort_column):
         
         with col6:
             value = row[sort_column] if pd.notna(row[sort_column]) else "N/A"
-            st.write(f"### {int(value)}")
+            if sort_column == "score":
+                st.write(f"### {value}")
+            else:
+                value = int(value) if value != "N/A" else "N/A"
+                st.write(f"### {value}")
         
         st.markdown("---")
-
-def display_tab_content(df, sort_column, table_header):
-    create_sticky_header()
-    display_anime_table(df, sort_column)
 
 with tab1:
     st.header("Top 50 by Rank")

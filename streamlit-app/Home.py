@@ -1,11 +1,9 @@
-# Home.py
 import streamlit as st
 import pandas as pd
+from streamlit_option_menu import option_menu
 
-# Set page configuration to wide mode
 st.set_page_config(layout="wide", page_title="Anime Data Analysis")
 
-# Load your data (assuming you have a CSV file)
 @st.cache_data
 def load_data():
     return pd.read_csv("../data/animes_better.csv")
