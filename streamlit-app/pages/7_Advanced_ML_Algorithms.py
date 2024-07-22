@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import pickle
 import plotly.graph_objs as go
 import plotly.express as px
 from sklearn.metrics import r2_score, mean_squared_error
@@ -10,6 +11,36 @@ from utils import load_models_and_data
 st.set_page_config(layout="wide", page_title="Advanced ML Algorithms")
 
 st.markdown("""<style>.stTabs [data-baseweb="tab-list"] {justify-content: flex-end;}</style>""", unsafe_allow_html=True)
+
+@st.cache_resource
+def load_models_and_data():
+    models = {}
+    data = {}
+    
+    model_names = ['random_forest', 'random_forest_tuned', 'gradient_boosting', 'xgboost']
+    for model in model_names:
+        model_path = f'./models/{model}.pkl'
+        data_path = f'./data/prepared_{model}_data.pkl'
+        
+        try:
+            with open(model_path, 'rb') as f:
+                models[model] = pickle.load(f)
+            with open(data_path, 'rb') as f:
+                data[model] = pickle.load(f)
+        except Exception as e:
+            st.warning(f"Failed to load {model} model or data: {str(e)}")
+    
+    nn_model_path = './models/neural_network_savedmodel'
+    nn_data_path = './data/prepared_neural_network_data.pkl'
+    
+    try:
+        models['neural_network'] = tf.saved_model.load(nn_model_path)
+        with open(nn_data_path, 'rb') as f:
+            data['neural_network'] = pickle.load(f)
+    except Exception as e:
+        st.warning(f"Failed to load neural network model or data: {str(e)}")
+    
+    return models, data
 
 models, prepared_data = load_models_and_data()
 

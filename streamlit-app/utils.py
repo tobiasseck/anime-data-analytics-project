@@ -1,3 +1,4 @@
+import pandas as pd
 import streamlit as st
 import pickle
 import os
@@ -7,6 +8,7 @@ import tensorflow as tf
 def load_models_and_data():
     models = {}
     data = {}
+    total_anime = 0
 
     base_path = os.path.dirname(os.path.abspath(__file__))
     
@@ -34,6 +36,8 @@ def load_models_and_data():
                     'scaler': loaded_data.get('scaler'),
                     'original_data': loaded_data
                 }
+                if isinstance(loaded_data, dict) and 'original_data' in loaded_data:
+                    total_anime = max(total_anime, len(loaded_data['original_data']))                
         except Exception as e:
             st.warning(f"Failed to load multiple_regression_{reg_type} model or data: {str(e)}")
 
@@ -56,6 +60,8 @@ def load_models_and_data():
                     'scaler': loaded_data.get('scaler'),
                     'original_data': loaded_data
                 }
+                if isinstance(loaded_data, dict) and 'original_data' in loaded_data:
+                    total_anime = max(total_anime, len(loaded_data['original_data']))
         except Exception as e:
             st.warning(f"Failed to load {model} model or data: {str(e)}")
 
@@ -75,7 +81,12 @@ def load_models_and_data():
                 'scaler': loaded_data.get('scaler'),
                 'original_data': loaded_data
             }
+            if isinstance(loaded_data, dict) and 'original_data' in loaded_data:
+                total_anime = max(total_anime, len(loaded_data['original_data']))
     except Exception as e:
         st.warning(f"Failed to load neural network model or data: {str(e)}")
     
-    return models, data
+    if total_anime == 0:
+        total_anime = 10000
+
+    return models, data, total_anime
