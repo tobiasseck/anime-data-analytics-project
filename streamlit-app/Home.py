@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import hydralit_components as hc
 import utils
+from utils import load_models_and_data
+
 
 st.set_page_config(layout="wide", page_title="Anime Data Analysis")
 
